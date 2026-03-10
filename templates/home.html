@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>XFull</title>
+<style>
+body{
+    background-image:url("{{ url_for('static', filename='background.png') }}");
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    height:100vh;
+    margin:0;
+    font-family:'Bahnschrift', Arial, sans-serif;
+    color:white;
+    text-align:center;
+}
+.top{ position:absolute; top:20px; left:20px; }
+.start{
+    margin-top:250px;
+    display:inline-block;
+    padding: 30px;
+    border: 2px solid black;
+    border-radius: 15px;
+    background: rgba(0,0,50,0.6);
+}
+button{
+    font-family:'Bahnschrift', Arial, sans-serif;
+    font-size:20px;
+    padding:15px 40px;
+    background:#3a7bff;
+    border:2px solid black;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
+}
+.logout{
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    padding:10px 20px;
+    background:red;
+    border:2px solid black;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+<img src="{{ url_for('static', filename='logo.png') }}" width="120">
+</div>
+
+<h1>Welcome {{username}}</h1>
+
+<div class="start">
+  <a href="{{ url_for('watch') }}">
+    <button>Start Watching?</button>
+  </a>
+</div>
+
+<a href="/logout"><button class="logout">Logout</button></a>
+
+</body>
+</html>

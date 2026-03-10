@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>XFull Upload</title>
+
+<style>
+
+body{
+background:#111;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+.section{
+background:#1a1a1a;
+padding:20px;
+border-radius:10px;
+margin-bottom:30px;
+}
+
+input,select,textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:10px;
+border-radius:5px;
+border:none;
+}
+
+button{
+padding:10px 20px;
+background:#e50914;
+border:none;
+color:white;
+border-radius:5px;
+cursor:pointer;
+}
+
+.uploadGrid{
+display:grid;
+grid-template-columns:repeat(auto-fill,200px);
+gap:20px;
+}
+
+.card{
+background:#222;
+padding:10px;
+border-radius:8px;
+}
+
+.poster{
+width:100%;
+height:300px;
+object-fit:cover;
+border-radius:5px;
+background:#000;
+}
+
+.smallBtn{
+margin-top:5px;
+background:#444;
+}
+
+</style>
+
+<script>
+
+function validateUpload(){
+
+let poster=document.getElementById("poster").files.length
+let video=document.getElementById("video").files.length
+let trailer=document.getElementById("trailer").files.length
+
+if(poster==0){
+alert("You must upload a poster")
+return false
+}
+
+if(video==0 && trailer==0){
+alert("You must upload either a movie OR a trailer")
+return false
+}
+
+return true
+}
+
+</script>
+
+</head>
+<body>
+
+<h1>Upload Movie</h1>
+
+<div class="section">
+
+<form method="POST" enctype="multipart/form-data" onsubmit="return validateUpload()">
+
+<input type="hidden" name="action" value="upload">
+
+Title
+<input type="text" name="upload_title" required>
+
+Category
+<select name="upload_category">
+{% for cat in categories %}
+<option value="{{ cat[0] }}">{{ cat[1] }}</option>
+{% endfor %}
+</select>
+
+Description
+<textarea name="upload_description"></textarea>
+
+Poster (REQUIRED)
+<input type="file" id="poster" name="upload_poster" required>
+
+Movie Video
+<input type="file" id="video" name="upload_video">
+
+Trailer
+<input type="file" id="trailer" name="upload_trailer">
+
+<button type="submit">Upload Movie</button>
+
+</form>
+
+</div>
+
+<h1>Your Uploads</h1>
+
+<div class="uploadGrid">
+
+{% for item in uploaded_items %}
+
+<div class="card">
+
+{% if item[4] %}
+<img class="poster" src="/static/posters/{{ item[4] }}">
+{% else %}
+<div class="poster"></div>
+{% endif %}
+
+<h3>{{ item[1] }}</h3>
+
+<p>Category: {{ item[3] }}</p>
+<p>Uploader: {{ item[5] }}</p>
+
+<form method="POST">
+<input type="hidden" name="action" value="delete_upload">
+<input type="hidden" name="upload_id" value="{{ item[0] }}">
+<button class="smallBtn">Delete</button>
+</form>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

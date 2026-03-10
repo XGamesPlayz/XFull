@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XFull Upload Edit</title>
+    <style>
+        body {
+            font-family: Bahnschrift, Arial, sans-serif;
+            background-color: #e0f0ff;
+            color: #000;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h1 {
+            margin-top: 20px;
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #3a7bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .movie-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 20px;
+        }
+        .movie-card {
+            border: 2px solid black;
+            padding: 15px;
+            width: 250px;
+            background-color: #fff;
+            border-radius: 10px;
+        }
+        .movie-card img {
+            width: 100%;
+            height: auto;
+            border: 1px solid black;
+        }
+        .movie-card form {
+            margin-top: 10px;
+        }
+        input, select {
+            padding: 5px;
+            margin: 5px 0;
+            width: 90%;
+        }
+        button {
+            padding: 8px 15px;
+            margin-top: 5px;
+            background: #3a7bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-btn {
+            background: #ff3a3a;
+        }
+        label {
+            display: block;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-btn" onclick="window.location.href='/upload'">Back</button>
+<h1>Edit or Delete Shows/Movies</h1>
+
+<div class="movie-grid">
+    {% for item in uploaded_items %}
+    <div class="movie-card">
+        <h3>{{ item.title }}</h3>
+        <p><strong>Category:</strong> {{ item.name }}</p>
+        <p><strong>Uploader:</strong> {{ item.uploader }}</p>
+        {% if item.poster_file %}
+        <img src="/static/posters/{{ item.poster_file }}">
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="movie_id" value="{{ item.id }}">
+            <label>Title:</label>
+            <input type="text" name="edit_title" value="{{ item.title }}" required>
+
+            <label>Category:</label>
+            <select name="edit_category">
+                {% for cat in categories %}
+                    <option value="{{ cat[0] }}" {% if cat[0]==item.category_id %}selected{% endif %}>{{ cat[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Upload Video (optional):</label>
+            <input type="file" name="edit_video">
+
+            <label>Upload Trailer (optional):</label>
+            <input type="file" name="edit_trailer">
+
+            <button type="submit" name="action" value="edit">Save Changes</button>
+            <button type="submit" name="action" value="delete" class="delete-btn">Delete</button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

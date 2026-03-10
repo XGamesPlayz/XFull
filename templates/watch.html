@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XFull - Watch</title>
+    <style>
+        body {
+            background-color: #0b0b2a;
+            font-family: 'Bahnschrift', Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #111144;
+        }
+        header h1 {
+            margin: 0;
+        }
+        .user-controls {
+            display: flex;
+            gap: 10px;
+        }
+        .user-controls button {
+            padding: 8px 16px;
+            background: #3a7bff;
+            border: 2px solid black;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Bahnschrift', Arial, sans-serif;
+        }
+        .search-bar {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .search-bar input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: 2px solid black;
+            font-family: 'Bahnschrift', Arial, sans-serif;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            background: #3a7bff;
+            border: 2px solid black;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Bahnschrift', Arial, sans-serif;
+        }
+        .category-section {
+            margin: 20px;
+        }
+        .video-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .video-card {
+            width: 200px;
+            background: rgba(0,0,50,0.6);
+            border: 2px solid black;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+        }
+        .video-card img {
+            width: 100%;
+            height: auto;
+        }
+        .video-title {
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>XFull Watch</h1>
+    <div class="user-controls">
+        <a href="/upload"><button>Upload</button></a>
+        <a href="/logout"><button>Logout</button></a>
+    </div>
+</header>
+
+<div class="search-bar">
+    <form method="GET" action="/watch">
+        <input type="text" name="search" placeholder="Search..." value="{{ search_query }}">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+{% if search_query %}
+    <h2 style="text-align:center;">Search results for "{{ search_query }}"</h2>
+    <div class="video-grid">
+        {% for video in search_results %}
+        <div class="video-card">
+            <a href="{{ url_for('video_page', video_id=video['id']) }}">
+                <img src="{{ url_for('static', filename='posters/' + video['poster_file']) }}" alt="Poster">
+                <div class="video-title">{{ video['title'] }}</div>
+            </a>
+        </div>
+        {% endfor %}
+        {% if search_results|length == 0 %}
+        <p style="text-align:center; width:100%;">No videos found.</p>
+        {% endif %}
+    </div>
+{% else %}
+    {% for category in categories %}
+    <div class="category-section">
+        <h2>{{ category.name }}</h2>
+        <div class="video-grid">
+            {% for video in category.videos %}
+            <div class="video-card">
+                <a href="{{ url_for('video_page', video_id=video['id']) }}">
+                    <img src="{{ url_for('static', filename='posters/' + video['poster_file']) }}" alt="Poster">
+                    <div class="video-title">{{ video['title'] }}</div>
+                </a>
+            </div>
+            {% endfor %}
+            {% if category.videos|length == 0 %}
+            <p>No videos in this category.</p>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if random_movies %}
+    <div class="video-grid" style="margin:20px;">
+        {% for video in random_movies %}
+        <div class="video-card">
+            <a href="{{ url_for('video_page', video_id=video['id']) }}">
+                <img src="{{ url_for('static', filename='posters/' + video['poster_file']) }}" alt="Poster">
+                <div class="video-title">{{ video['title'] }}</div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endif %}
+
+</body>
+</html>
